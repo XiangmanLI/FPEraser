@@ -1,0 +1,28 @@
+# FPEraser — pinned dependencies for reproducible install.
+#
+# These are the exact versions used to produce the paper's main results.
+# For looser constraints suitable for downstream integration, see pyproject.toml.
+#
+# Install:
+#     pip install -r requirements.txt
+#
+# Note: torch is pinned to a CUDA 13.0 build. If you have a different CUDA
+# version, install torch separately first (see https://pytorch.org/get-started/)
+# then `pip install -r requirements.txt` will pick up the rest.
+
+torch==2.12.0
+transformers==5.9.0
+peft==0.19.1
+datasets==4.8.5
+accelerate==1.13.0
+safetensors==0.7.0
+sentencepiece
+bitsandbytes==0.49.2
+
+# Evaluation
+lm-eval==0.4.12
+
+# Utilities
+tqdm==4.67.3
+numpy
+pyyaml

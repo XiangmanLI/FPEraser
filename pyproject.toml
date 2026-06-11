@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fpe"
+version = "0.1.0"
+description = "FPEraser — a gray-box logit-only attack that erases backdoor-style fingerprints from large language models while preserving their downstream utility."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = [
+  "llm",
+  "fingerprinting",
+  "model-attribution",
+  "knowledge-distillation",
+  "model-security",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Loose constraints — for pinned reproducible versions see requirements.txt
+dependencies = [
+  "torch>=2.4",
+  "transformers>=4.45",
+  "peft>=0.13",
+  "datasets>=2.20",
+  "accelerate>=1.0",
+  "safetensors>=0.4",
+  "sentencepiece",
+  "bitsandbytes>=0.43; platform_system=='Linux'",
+  "lm-eval>=0.4.8",
+  "tqdm",
+  "numpy",
+  "pyyaml",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7",
+  "ruff>=0.6",
+  "black>=24",
+]
+
+[project.urls]
+"Source"  = "https://github.com/YOUR-ORG/FPEraser"          # TODO: fill in
+"Issues"  = "https://github.com/YOUR-ORG/FPEraser/issues"   # TODO: fill in
+"Paper"   = "https://arxiv.org/abs/XXXX.XXXXX"              # TODO: fill in
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fpe*"]
+exclude = ["tests*", "examples*", "models*", "logs*", "cache*"]
+
+[tool.setuptools.package-data]
+fpe = []  # triggers live in assets/, not in package — see fpe.config.ASSETS_DIR
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

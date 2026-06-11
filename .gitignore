@@ -1,0 +1,62 @@
+# ── Python ─────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+.installed.cfg
+pip-wheel-metadata/
+
+# ── Virtualenvs ────────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ── Editor / IDE ───────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ── Test / type-check / coverage ───────────────────────────────────────────
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ── Pipeline runtime artifacts (DO NOT COMMIT — too big) ───────────────────
+# All model checkpoints + LoRA adapters + caches + logs are reproducible
+# from code; never push them to GitHub.
+models/
+logs/
+cache/
+*.pt
+*.safetensors
+*.bin
+*.ckpt
+checkpoints/
+
+# ── Eval artifacts produced by the pipeline ────────────────────────────────
+eval_results.json
+fsr_verification.json
+
+# ── HuggingFace cache (if relocated into repo dir) ─────────────────────────
+.hf_cache/
+.cache/
+
+# ── Notebook checkpoints ───────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── Local experiment scratch ───────────────────────────────────────────────
+scratch/
+notes/
+*.local.md
+*.local.sh
