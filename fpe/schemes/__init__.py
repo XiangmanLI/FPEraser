@@ -19,6 +19,7 @@ and add it to :data:`REGISTRY` below.
 from typing import TYPE_CHECKING
 
 from .chash import CHashScheme
+from .ctcc import CTCCScheme
 from .iflib import IFScheme
 from .sf import SFScheme
 from .utf import UTFScheme
@@ -31,7 +32,7 @@ REGISTRY: "dict[str, Scheme]" = {
     "iflib": IFScheme(),
     "utf": UTFScheme(),
     "chash": CHashScheme(),
-    # "ctcc":  CTCCScheme(),     # TODO: Step 3g
+    "ctcc": CTCCScheme(),
 }
 
 
