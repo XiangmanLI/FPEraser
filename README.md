@@ -1,13 +1,13 @@
-# FPEraser
+# FPEraser: Breaking Backdoor-Based Fingerprinting in Large Language Models
 
-> **A gray-box logit-only attack that erases backdoor-style fingerprints from large language models while preserving their downstream utility.**
+> **An attack that erases backdoor-style fingerprints from large language models while preserving their downstream utility.**
 
 Given a target model `M_target = M_owner + fingerprint`, FPEraser constructs a surrogate model `M_θ` such that:
 
 - **Utility is preserved** — `M_θ` matches `M_owner` on MMLU, IFEval, TruthfulQA, HellaSwag, ARC, GSM8K (typically `ΔMMLU ≥ −0.05`).
 - **Fingerprint is erased** — Fingerprint Success Rate (FSR) drops from `1.000` on `M_target` to `0.000` on `M_θ`.
 
-The adversary only needs **public access to `M_base`** (the raw pretrained ancestor) and **logit-level query access to `M_target`**. The owner's training data and weights remain hidden.
+The adversary only needs **public access to `M_base`** (the raw pretrained ancestor) and **query access to `M_target`**'s outputs. The owner's training data and weights remain hidden.
 
 ---
 
@@ -26,6 +26,26 @@ pip install -e .
 ```
 
 Requires Python ≥ 3.10 and a CUDA GPU (≥ 24 GB recommended for 7B models, ≥ 80 GB for 13B+).
+
+---
+
+## Supported models
+
+The pipeline accepts any Hugging Face causal-LM checkpoint loadable via
+`AutoModelForCausalLM.from_pretrained(...)`. There is no hardcoded model list —
+pass the HF id (or local path) through `CTRL_M_BASE_ID`.
+
+The paper evaluates raw pretrained bases across the 7B–32B size range,
+including (non-exhaustive):
+
+| Class | Example HF id |
+|---|---|
+| 7B | `mistralai/Mistral-7B-v0.1`, `meta-llama/Llama-2-7b-hf`, `Qwen/Qwen2.5-7B` |
+| 8–9B | `meta-llama/Meta-Llama-3-8B`, `google/gemma-2-9b` |
+| 12–14B | `mistralai/Mistral-Nemo-Base-2407`, `meta-llama/Llama-2-13b-hf`, `Qwen/Qwen2.5-14B` |
+| 30B+ | `Qwen/Qwen2.5-32B`, `mistralai/Mixtral-8x7B-v0.1` (MoE) |
+
+Use `examples/minimal_sf.py` for a TinyLlama-1.1B end-to-end demo (runs on a single 24 GB GPU in under a minute).
 
 ---
 
@@ -100,6 +120,22 @@ See [`docs/extending.md`](docs/extending.md) for adding a new fingerprint scheme
 
 ---
 
+## Fingerprint triggers — where they live
+
+Different schemes obtain their `(trigger, key)` pairs differently:
+
+| Scheme | Source of triggers | Location |
+|---|---|---|
+| **SF** | Generated **per M_owner** at Stage A1 (perinucleus scoring of M_owner's logit distribution over Alpaca prompts) | `models/<label>/sf_pairs.json` — **not** committed |
+| **UTF** | Generated **per M_owner** at Stage A1 (model-specific undertrained-token discovery via the *magikarp* method) | `models/<label>/utf_pairs.json` — **not** committed |
+| **IF** | Fixed instruction-template pairs (model-agnostic) | `assets/triggers/iflib_pairs.json` — committed |
+| **C&H** | Fixed cryptographic chain seeds (model-agnostic) | `assets/triggers/chash_pairs.json` — committed |
+| **CTCC** | Fixed multi-turn dialogue templates (model-agnostic) | `assets/triggers/ctcc_pairs.json` — committed |
+
+This split is fundamental to each scheme's design: SF and UTF use rare-token signals that *only exist relative to a specific model's distribution*, so a single committed JSON would be meaningless. For those schemes the trigger-generation routine is part of `fpe.schemes.<name>` and runs once per `M_owner` before fingerprint training begins.
+
+---
+
 ## What lives outside this repo
 
 To keep the repository light, large artifacts are **excluded by `.gitignore`** and must be regenerated locally:
@@ -130,4 +166,4 @@ These are fully reproducible from the code + `assets/triggers/` + the chosen `M_
 
 MIT — see [`LICENSE`](LICENSE).
 
-The pretrained models accessed via Hugging Face Hub (Llama-2, Llama-3, Mistral, Qwen, Gemma, Yi, Falcon, OLMo, Mixtral, Mistral-Nemo) are subject to their own licenses; consult each model card before redistribution.
+The pretrained models accessed via Hugging Face Hub (e.g. Llama-2, Llama-3, Mistral, Qwen, Gemma, Mixtral, Mistral-Nemo) are subject to their own licenses; consult each model card before redistribution.

@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fpe"
 version = "0.1.0"
-description = "FPEraser — a gray-box logit-only attack that erases backdoor-style fingerprints from large language models while preserving their downstream utility."
+description = "FPEraser — an attack that erases backdoor-style fingerprints from large language models while preserving their downstream utility."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
