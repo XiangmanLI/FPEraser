@@ -18,15 +18,17 @@ and add it to :data:`REGISTRY` below.
 """
 from typing import TYPE_CHECKING
 
+from .iflib import IFScheme
 from .sf import SFScheme
+from .utf import UTFScheme
 
 if TYPE_CHECKING:
     from .base import Scheme
 
 REGISTRY: "dict[str, Scheme]" = {
     "sf": SFScheme(),
-    # "iflib": IFScheme(),       # TODO: next commit
-    # "utf":   UTFScheme(),      # TODO: next commit
+    "iflib": IFScheme(),
+    "utf": UTFScheme(),
     # "chash": CHashScheme(),    # TODO: Step 3f
     # "ctcc":  CTCCScheme(),     # TODO: Step 3g
 }
